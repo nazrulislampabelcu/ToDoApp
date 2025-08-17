@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tution Schedule Checker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    padding: 30px 40px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    backdrop-filter: blur(10px);
+  }
+
+  h1 {
+    margin-bottom: 25px;
+    font-weight: 600;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+
+  label {
+    display: block;
+    text-align: left;
+    margin-bottom: 6px;
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+
+  select, input[type="number"] {
+    width: 100%;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    transition: box-shadow 0.3s ease;
+  }
+
+  select:focus, input[type="number"]:focus {
+    box-shadow: 0 0 10px #9b59b6;
+  }
+
+  button {
+    background: #9b59b6;
+    color: #fff;
+    border: none;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    width: 100%;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 6px 15px rgba(155, 89, 182, 0.6);
+  }
+
+  button:hover {
+    background: #8e44ad;
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(142, 68, 173, 0.8);
+  }
+
+  button:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 15px rgba(155, 89, 182, 0.6);
+  }
+
+  #result {
+    margin-top: 25px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #fff;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+    min-height: 90px;
+  }
+
+  #result strong {
+    color: #ffe066;
+  }
+
+  @media (max-width: 480px) {
+    .container {
+      padding: 25px 20px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Tution Schedule Checker</h1>
+
+  <label for="startDay">Start Day of Month:</label>
+  <select id="startDay">
+    <option value="saturday">Saturday</option>
+    <option value="sunday">Sunday</option>
+    <option value="monday">Monday</option>
+    <option value="tuesday">Tuesday</option>
+    <option value="wednesday">Wednesday</option>
+    <option value="thursday">Thursday</option>
+    <option value="friday" selected>Friday</option>
+  </select>
+
+  <label for="monthDays">Number of Days in Month:</label>
+  <input type="number" id="monthDays" value="31" min="1" max="31" />
+
+  <label for="date">Date to Check:</label>
+  <input type="number" id="date" value="21" min="1" max="31" />
+
+  <button onclick="checkTution()">Check Tution</button>
+
+  <div id="result"></div>
+</div>
+
+<script>
+function tution(startDay, month, date) {
+    let weaks = [
+        [], // Saturday
+        [], // Sunday
+        [], // Monday
+        [], // Tuesday
+        [], // Wednesday
+        [], // Thursday
+        []  // Friday
+    ];
+
+    const days = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
+
+    let startIndex = days.indexOf(startDay.toLowerCase());
+
+    if (startIndex === -1) {
+        return "Invalid day input";
+    } else {
+        for (let i = 1; i <= month; i++) {
+            let dayIndex = (i - 1 + startIndex) % 7;
+            weaks[dayIndex].push(i);
+        }
+    } 
+    
+    if(weaks[0].includes(date) || weaks[2].includes(date) || weaks[4].includes(date)){
+        return "Azmain + Choity";
+    } else if(weaks[5].includes(date)) {
+        return "Arham + Sumaya + Choity";
+    } else {
+        return "Arham + Sumaya + Lamya + Choity";
+    }
+}
+
+// Helper function for date ordinal suffix (1st, 2nd, 3rd, etc.)
+function getOrdinalSuffix(day) {
+    if (day > 3 && day < 21) return 'th'; // 4th to 20th all end with th
+    switch (day % 10) {
+        case 1: return 'st';
+        case 2: return 'nd';
+        case 3: return 'rd';
+        default: return 'th';
+    }
+}
+
+function checkTution() {
+    const startDay = document.getElementById('startDay').value;
+    const monthDays = parseInt(document.getElementById('monthDays').value);
+    const date = parseInt(document.getElementById('date').value);
+    const days = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+
+    if (date < 1 || date > monthDays) {
+        document.getElementById('result').innerText = "Please enter a valid date within the month.";
+        return;
+    }
+
+    let startIndex = days.map(d => d.toLowerCase()).indexOf(startDay.toLowerCase());
+    let dayIndex = (startIndex + date - 1) % 7;
+    let dayName = days[dayIndex];
+
+    let result = tution(startDay, monthDays, date);
+
+    // Format the result names nicely: split by '+', trim, join with commas and "and"
+    let namesArray = result.split('+').map(name => name.trim());
+
+    let formattedNames = '';
+    if (namesArray.length === 1) {
+        formattedNames = namesArray[0];
+    } else if (namesArray.length === 2) {
+        formattedNames = `${namesArray[0]} and ${namesArray[1]}`;
+    } else {
+        formattedNames = namesArray.slice(0, -1).join(', ') + ', and ' + namesArray.slice(-1);
+    }
+
+    document.getElementById('result').innerHTML = 
+        `This month starts on <strong>${startDay.charAt(0).toUpperCase() + startDay.slice(1)}</strong>.<br/>
+         The <strong>${date}${getOrdinalSuffix(date)}</strong> falls on <strong>${dayName}</strong>.<br/>
+         You have class with <strong>${formattedNames}</strong>.`;
+}
+</script>
+
+</body>
+</html>
