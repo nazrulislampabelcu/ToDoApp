@@ -24,8 +24,8 @@ if (startIndex === -1) {
 if(weaks[0].includes(date) || weaks[2].includes(date)||weaks[4].includes(date)){
     return "Azmain + Choity";
 }else{
-    if(weaks[5].includes(date)){
-        return "aArham + sumaya + choity"
+    if(!weaks[5].includes(date)){
+        return "Arham + sumaya + Lamya"
     }
     return "Arham + sumaya + Lamya + choity"
 }
